@@ -1,9 +1,10 @@
-<html>
+<!DOCTYPE html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Te-Bar - Tebengan Bareng UNIMUS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -14,60 +15,130 @@
         }
         
         body {
-            background-color: cyan; 
+            background-color: cyan; /* Dikembalikan sesuai kesepakatan tim */
             color: #333;
             overflow-x: hidden;
         }
 
+        /* --- Navbar Styles --- */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 25px 80px;
-            background-color: rgba(255, 255, 255, 0.2); 
+            padding: 20px 80px;
+            /* Dibuat agak transparan agar warna cyan tetap terlihat */
+            background-color: rgba(255, 255, 255, 0.4); 
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .logo svg {
-            height: 45px;
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #033D36;
+            text-decoration: none;
+            letter-spacing: -1px;
         }
 
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
 
+        .nav-links a {
+            text-decoration: none;
+            color: #033D36;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.7;
+        }
+
+        /* --- Button Styles --- */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: #033D36;
+            color: white;
+            box-shadow: 0 4px 6px rgba(3, 61, 54, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: #022622;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #033D36;
+            border: 2px solid #033D36;
+        }
+
+        .btn-outline:hover {
+            background-color: #033D36;
+            color: white;
+        }
+
+        /* --- Hero Section Styles --- */
         .hero {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 40px 80px;
-            min-height: 80vh;
+            padding: 60px 80px;
+            min-height: calc(100vh - 80px);
         }
 
         .hero-text {
             flex: 1;
-            max-width: 700px;
+            max-width: 600px;
             z-index: 2;
         }
 
         .hero-text h1 {
-            font-size: 4.5rem;
+            font-size: 4rem;
             font-weight: 800;
             color: #033D36; 
-            line-height: 1.1;
+            line-height: 1.15;
             margin-bottom: 20px;
         }
 
         .hero-text .subtitle {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: #033D36;
-            font-weight: 600;
-            margin-bottom: 40px;
-            background: rgba(255, 255, 255, 0.3);
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 8px;
+            font-weight: 500;
+            margin-bottom: 30px;
+            line-height: 1.6;
         }
 
-        .btn-secondary {
-            background-color: #033D36;
-            color: white;
+        .trust-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.6);
+            color: #033D36;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
         }
 
         .hero-image {
@@ -77,39 +148,84 @@
         }
 
         .image-placeholder {
-            width: 500px;
+            width: 100%;
+            max-width: 500px;
             height: 450px;
             background-color: rgba(255, 255, 255, 0.5);
             border: 2px dashed #033D36;
-            border-radius: 20px;
+            border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             color: #033D36;
+            overflow: hidden;
         }
 
+        .image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- Responsive Design --- */
         @media (max-width: 1024px) {
+            header { padding: 20px 40px; }
+            .hero { padding: 40px; }
             .hero-text h1 { font-size: 3rem; }
-            header, .hero { padding: 20px 40px; }
-            .hero { flex-direction: column; text-align: center; }
-            .hero-image { margin-top: 50px; width: 100%; }
-            .buttons { justify-content: center; }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+            .nav-links { display: none; }
+            
+            .hero { 
+                flex-direction: column; 
+                text-align: center; 
+                padding: 30px 20px;
+                justify-content: center;
+            }
+            .hero-text { margin-bottom: 40px; }
+            .cta-group { 
+                justify-content: center; 
+                flex-direction: column;
+            }
+            .hero-image { width: 100%; justify-content: center; }
+            .image-placeholder { height: 350px; }
         }
     </style>
 </head>
+<body>
+
+    <header>
+        <a href="#" class="logo">Te-Bar.</a>
+        <nav class="nav-links">
+            <a href="#">Beranda</a>
+            <a href="#">Cara Kerja</a>
+            <a href="#">Keamanan</a>
+        </nav>
+        <a href="#" class="btn btn-primary">Masuk / Daftar</a>
+    </header>
 
     <main class="hero">
         <div class="hero-text">
+            <div class="trust-badge">🏍️ Khusus Mahasiswa UNIMUS</div>
             <h1>Te-Bar<br>Tebengan Bareng.</h1>
-            <p class="subtitle">Tebengan Bareng mahasiswanya UNIMUS</p>
+            <p class="subtitle">Aman & Terpercaya. Kurangi macet, hemat ongkos, dan tambah teman satu kampus.</p>
             
-            <p style="color: #033D36; font-weight: 500;">Khusus mahasiswa UNIMUS · Aman & Terpercaya.</p>
+            <div class="cta-group">
+                <a href="#" class="btn btn-primary">Cari Tebengan</a>
+                <a href="#" class="btn btn-outline">Beri Tebengan</a>
+            </div>
         </div>
 
         <div class="hero-image">
             <div class="image-placeholder">
-                <p><img src="assets/images/tebar.jpg" alt="Desain Landing Page Te-Bar" style="width: 500px; height: auto;"></p>
+                <img src="assets/images/tebar.jpg" alt="Ilustrasi Mahasiswa UNIMUS" onerror="this.style.display='none'; this.parentNode.innerHTML='<p>Ilustrasi/Foto Aplikasi Tampil Di Sini</p>'">
             </div>
         </div>
     </main>
