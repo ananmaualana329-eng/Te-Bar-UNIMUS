@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keamanan - Te-Bar</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #14c7c0;
+      color: #083c3a;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background-color: #6ed6d2;
+    }
+
+    .navbar h1 {
+      margin: 0;
+    }
+
+    .profile {
+      font-weight: 500;
+    }
+
+    /* Header */
+    .header {
+      padding: 40px 60px 20px;
+    }
+
+    .header h1 {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 18px;
+      max-width: 600px;
+    }
+
+    /* Container */
+    .container {
+      background-color: #a7d6d4;
+      margin: 30px 60px;
+      padding: 30px;
+      border-radius: 20px;
+    }
+
+    /* Card */
+    .card {
+      background-color: #d6eeee;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-text {
+      max-width: 80%;
+    }
+
+    .card h2 {
+      margin: 0 0 5px;
+      font-size: 18px;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .icon {
+      font-size: 26px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1>Te-Bar.</h1>
+    <div class="profile">Keamanan Sistem</div>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Keamanan Pengguna</h1>
+    <p>
+      Te-Bar menerapkan standar keamanan sistem untuk menjaga kerahasiaan data,
+      memastikan keaslian pengguna, serta menciptakan lingkungan tebengan yang aman dan terpercaya.
+    </p>
+  </div>
+
+  <!-- Content -->
+  <div class="container">
+
+    <div class="card">
+      <div class="card-text">
+        <h2>🔐 Autentikasi Aman</h2>
+        <p>
+          Sistem menggunakan enkripsi password (bcrypt) dan token autentikasi (JWT)
+          untuk memastikan hanya pengguna yang terverifikasi yang dapat mengakses layanan.
+        </p>
+      </div>
+      <div class="icon">✔️</div>
+    </div>
+
+    <div class="card">
+      <div class="card-text">
+        <h2>🛡️ Perlindungan Data</h2>
+        <p>
+          Seluruh data pengguna dilindungi dan dikirim melalui protokol HTTPS
+          untuk mencegah akses tidak sah dan penyadapan data.
+        </p>
+      </div>
+      <div class="icon">✔️</div>
+    </div>
+
+    <div class="card">
+      <div class="card-text">
+        <h2>📍 Verifikasi Identitas</h2>
+        <p>
+          Pengguna diwajibkan menggunakan email institusi untuk memastikan identitas
+          dan meningkatkan kepercayaan antar pengguna.
+        </p>
+      </div>
+      <div class="icon">✔️</div>
+    </div>
+
+    <div class="card">
+      <div class="card-text">
+        <h2>⚠️ Validasi Input</h2>
+        <p>
+          Sistem melakukan validasi dan sanitasi data untuk mencegah serangan
+          seperti SQL Injection dan Cross-Site Scripting (XSS).
+        </p>
+      </div>
+      <div class="icon">✔️</div>
+    </div>
+
+    <div class="card">
+      <div class="card-text">
+        <h2>🚨 Pelaporan Pengguna</h2>
+        <p>
+          Tersedia fitur pelaporan untuk menindaklanjuti pelanggaran dan menjaga
+          keamanan serta kenyamanan pengguna.
+        </p>
+      </div>
+      <div class="icon">✔️</div>
+    </div>
+
+  </div>
+
+</body>
+</html>
