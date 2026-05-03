@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beranda - Te-Bar UNIMUS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            background-color: cyan; /* Warna dasar dikembalikan ke Cyan */
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* --- Navbar --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 80px;
+            background-color: rgba(255, 255, 255, 0.4); 
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #033D36;
+            text-decoration: none;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #033D36;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* --- Main Content --- */
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #033D36;
+            margin-bottom: 10px;
+        }
+
+        .hero-title span {
+            font-style: italic;
+            text-decoration: underline;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: #022622;
+            margin-bottom: 35px;
+            font-weight: 500;
+        }
+
+        /* --- Search Card (Layout dari Referensi) --- */
+        .search-card {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-end;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+
+        .input-group {
+            flex: 1;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #033D36;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #033D36;
+            border-radius: 10px;
+            background: white;
+            outline: none;
+            font-weight: 600;
+        }
+
+        .btn-search {
+            background-color: #033D36;
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            background-color: #022622;
+        }
+
+        /* --- List Tebengan --- */
+        .list-title {
+            font-weight: 700;
+            color: #033D36;
+            margin-bottom: 20px;
+        }
+
+        .ride-item {
+            background-color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 6px solid #033D36;
+            transition: 0.3s;
+        }
+
+        .ride-item:hover {
+            background-color: white;
+        }
+
+        .driver-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .driver-avatar {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .driver-text h4 {
+            color: #033D36;
+            font-weight: 700;
+        }
+
+        .driver-text p {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .driver-text span {
+            color: #d97706; /* Warna oranye untuk penanda waktu */
+            font-weight: 700;
+        }
+
+        .price-section {
+            text-align: right;
+        }
+
+        .price-tag {
+            display: block;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #033D36;
+            margin-bottom: 5px;
+        }
+
+        .btn-book {
+            padding: 6px 18px;
+            border: 2px solid #033D36;
+            background: transparent;
+            color: #033D36;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-book:hover {
+            background: #033D36;
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header { padding: 20px; }
+            .search-card { flex-direction: column; align-items: stretch; }
+            .hero-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">Te-Bar.</a>
+        <div class="user-profile">
+            <span style="font-weight: 600; color: #033D36;">Anan Maulana Rafi</span>
+            <div class="avatar">AMR</div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="hero-title">Cari Tebengan <span>Kampus</span></h1>
+        <p class="hero-subtitle">Masukan detail perjalanan Anda untuk melihat siapa yang searah.</p>
+
+        <!-- Form Pencarian (Struktur dari Referensi) -->
+        <section class="search-card">
+            <div class="input-group">
+                <label>Lokasi Jemput</label>
+                <input type="text" placeholder="Cari lokasi (cth: Tembalang)">
+            </div>
+            <div class="input-group">
+                <label>Tujuan</label>
+                <select>
+                    <option>Gedung NRC UNIMUS</option>
+                    <option>Gedung GKB 1 UNIMUS</option>
+                    <option>Gedung GKB 2 UNIMUS</option>
+                    <option>Gedung GKB 3 UNIMUS</option>
+                    <option>Gedung SERBA GUNA</option>
+                    <option>Gedung ASRAMA PUTRA</option>
+                    <option>Gedung ASRAMA PUTRI</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Waktu Berangkat</label>
+                <input type="time">
+            </div>
+            <button class="btn-search">CARI SEKARANG</button>
+        </section>
+
+        <h3 class="list-title">Tebengan Tersedia di Sekitarmu</h3>
+
+        <!-- Daftar Tebengan -->
+        <div class="ride-item">
+            <div class="driver-info">
+                <div class="driver-avatar">🛵</div>
+                <div class="driver-text">
+                    <h4>Yeza Ayap</h4>
+                    <p>Vario 110 • <span>5 Menit Lagi</span></p>
+                </div>
+            </div>
+            <div class="price-section">
+                <span class="price-tag">Rp 5.000</span>
+                <button class="btn-book">Pesan</button>
+            </div>
+        </div>
+
+        <div class="ride-item">
+            <div class="driver-info">
+                <div class="driver-avatar">🛵</div>
+                <div class="driver-text">
+                    <h4>Aldi Taher</h4>
+                    <p>Supra • <span>12 Menit Lagi</span></p>
+                </div>
+            </div>
+            <div class="price-section">
+                <span class="price-tag">Rp 7.000</span>
+                <button class="btn-book">Pesan</button>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <a href="index.html" style="text-decoration: none; color: #033D36; font-weight: 700; font-size: 0.9rem;">
+                ← Kembali ke Halaman Utama
+            </a>
+        </div>
+
+    </main>
+
+</body>
+</html>
