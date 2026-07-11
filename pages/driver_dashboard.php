@@ -11,6 +11,14 @@ $driver = $stmt->fetch();
 if (!$driver) { die("Akses Ditolak."); }
 $driver_id = $driver['id'];
 
+// AJAX Toggles
+if (isset($_GET['ajax']) && $_GET['ajax'] == 'toggle') {
+    $data = json_decode(file_get_contents("php://input"), true);
+    $new_status = $data['status'] ? '1' : '0';
+    $pdo->prepare("UPDATE drivers SET status_online = ? WHERE id = ?")->execute([$new_status, $driver_id]);
+    echo json_encode(['success' => true]); exit;
+}
+
 // mengambil Order & Pendapatan Hari Ini
 $stmt_order = $pdo->prepare("SELECT o.*, u.nama as nama_penumpang FROM orders o JOIN users u ON o.user_id = u.id WHERE o.status = 'Menunggu Driver' OR (o.status IN ('Driver Menuju Lokasi', 'Driver Tiba', 'Perjalanan Dimulai') AND o.driver_id = ?) ORDER BY o.created_at DESC LIMIT 1");
 $stmt_order->execute([$driver_id]);
@@ -200,6 +208,14 @@ $total_trip = $income_today['total_trip'] ?? 0;
         </div>
     </div>
      <script>
+        // Logika Tab Sederhana
+        function gantiTab(tab, element) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            element.classList.add('active');
+        }
+
         // Peta sederhana (Driver View)
         const map = L.map('map', { zoomControl: false }).setView([-7.0253, 110.4697], 15);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
@@ -218,6 +234,15 @@ $total_trip = $income_today['total_trip'] ?? 0;
             }
         }
         lokasiGPS(); // memanggil GPS saat pertama buka
+
+        let isOnline = <?= $isOnline ? 'true' : 'false' ?>;
+        function toggleStatus() {
+            isOnline = !isOnline;
+            const btn = document.getElementById('btnStatus');
+            btn.style.background = isOnline ? '#10b981' : '#ef4444';
+            document.getElementById('statusText').innerText = isOnline ? 'Online' : 'Offline';
+            fetch('driver_dashboard.php?ajax=toggle', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: isOnline }) });
+        }
     </script>
 </body>
 </html>
