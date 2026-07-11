@@ -3,6 +3,24 @@ session_start();
 require_once '../config/database.php';
 
 if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit; }
+$user_id = $_SESSION['user_id'];
+
+$stmt = $pdo->prepare("SELECT d.*, u.nama, u.email FROM drivers d JOIN users u ON d.user_id = u.id WHERE d.user_id = ?");
+$stmt->execute([$user_id]);
+$driver = $stmt->fetch();
+if (!$driver) { die("Akses Ditolak."); }
+$driver_id = $driver['id'];
+
+// mengambil Order & Pendapatan Hari Ini
+$stmt_order = $pdo->prepare("SELECT o.*, u.nama as nama_penumpang FROM orders o JOIN users u ON o.user_id = u.id WHERE o.status = 'Menunggu Driver' OR (o.status IN ('Driver Menuju Lokasi', 'Driver Tiba', 'Perjalanan Dimulai') AND o.driver_id = ?) ORDER BY o.created_at DESC LIMIT 1");
+$stmt_order->execute([$driver_id]);
+$active_order = $stmt_order->fetch();
+
+$stmt_income = $pdo->prepare("SELECT SUM(harga) as total_pendapatan, COUNT(id) as total_trip FROM orders WHERE driver_id = ? AND status = 'Selesai' AND DATE(created_at) = CURDATE()");
+$stmt_income->execute([$driver_id]);
+$income_today = $stmt_income->fetch();
+$total_pendapatan = $income_today['total_pendapatan'] ?? 0;
+$total_trip = $income_today['total_trip'] ?? 0;
 ?>
 
 <!DOCTYPE html>
@@ -156,7 +174,7 @@ if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit; }
             <button onclick="kirimPesan()">➤</button>
         </div>
     </div>
-    
+
     <div class="withdraw-modal" id="modalWithdraw">
         <div class="withdraw-card">
             <div style="display: flex; justify-content: space-between; align-items: center;">
