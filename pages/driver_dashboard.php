@@ -199,5 +199,25 @@ $total_trip = $income_today['total_trip'] ?? 0;
             <button class="btn-w-submit" onclick="prosesWithdraw()">Tarik Saldo Sekarang</button>
         </div>
     </div>
+     <script>
+        // Peta sederhana (Driver View)
+        const map = L.map('map', { zoomControl: false }).setView([-7.0253, 110.4697], 15);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
+
+        const iconDriver = L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png', iconSize: [25, 41], iconAnchor: [12, 41] });
+        let driverMarker = null;
+
+        function lokasiGPS() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    const latlng = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                    map.setView(latlng, 16);
+                    if(!driverMarker) driverMarker = L.marker(latlng, {icon: iconDriver}).addTo(map).bindPopup("Lokasi Saya");
+                    else driverMarker.setLatLng(latlng);
+                });
+            }
+        }
+        lokasiGPS(); // memanggil GPS saat pertama buka
+    </script>
 </body>
 </html>
