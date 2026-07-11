@@ -1,3 +1,64 @@
+<?php
+session_start();
+require_once '../config/database.php';
+
+// Redirect jika sudah login
+if (isset($_SESSION['user_id'])) {
+    header("Location: map.php");
+    exit;
+}
+
+$error = '';
+$success = '';
+
+// 1. REGISTER
+if (isset($_POST['register'])) {
+    $role = $_POST['role'] ?? 'penumpang';
+    $nama = htmlspecialchars($_POST['nama']);
+    $nim = htmlspecialchars($_POST['nim']);
+    $email = htmlspecialchars($_POST['email']);
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $foto_name = 'default.jpg';
+
+    // Proses Upload Foto (Driver)
+    if ($role === 'driver' && isset($_FILES['foto']) && $_FILES['foto']['error'] === 0) {
+        $allowed = ['jpg', 'jpeg', 'png'];
+        $filename = $_FILES['foto']['name'];
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        
+        if (in_array($ext, $allowed)) {
+            $foto_name = $nim . '_' . time() . '.' . $ext; // Format: NIM_Waktu.jpg
+            move_uploaded_file($_FILES['foto']['tmp_name'], '../assets/uploads/' . $foto_name);
+        } else {
+            $error = "Format foto harus JPG atau PNG!";
+        }
+    }
+
+    if ($error == '') {
+        $stmt_check = $pdo->prepare("SELECT id FROM users WHERE nim = ? OR email = ?");
+        $stmt_check->execute([$nim, $email]);
+        
+        if ($stmt_check->rowCount() > 0) {
+            $error = "NIM atau Email sudah terdaftar!";
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO users (nim, nama, email, password, foto) VALUES (?, ?, ?, ?, ?)");
+            if ($stmt->execute([$nim, $nama, $email, $password, $foto_name])) {
+                $new_user_id = $pdo->lastInsertId();
+                if ($role === 'driver') {
+                    $motor = htmlspecialchars($_POST['motor']);
+                    $plat = htmlspecialchars($_POST['plat']);
+                    $stmt_driver = $pdo->prepare("INSERT INTO drivers (user_id, motor, plat_nomor) VALUES (?, ?, ?)");
+                    $stmt_driver->execute([$new_user_id, $motor, $plat]);
+                }
+                $success = "Pendaftaran berhasil! Silakan masuk.";
+            } else {
+                $error = "Terjadi kesalahan sistem.";
+            }
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
