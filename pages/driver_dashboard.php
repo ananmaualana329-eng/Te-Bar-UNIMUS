@@ -18,6 +18,12 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'toggle') {
     $pdo->prepare("UPDATE drivers SET status_online = ? WHERE id = ?")->execute([$new_status, $driver_id]);
     echo json_encode(['success' => true]); exit;
 }
+if (isset($_GET['ajax']) && $_GET['ajax'] == 'check') {
+    header('Content-Type: application/json');
+    $stmt_check = $pdo->prepare("SELECT o.*, u.nama as nama_penumpang FROM orders o JOIN users u ON o.user_id = u.id WHERE o.status = 'Menunggu Driver' OR (o.status IN ('Driver Menuju Lokasi', 'Driver Tiba', 'Perjalanan Dimulai') AND o.driver_id = ?) ORDER BY o.created_at DESC LIMIT 1");
+    $stmt_check->execute([$driver_id]);
+    echo json_encode($stmt_check->fetch() ?: ['empty' => true]); exit;
+}
 
 // mengambil Order & Pendapatan Hari Ini
 $stmt_order = $pdo->prepare("SELECT o.*, u.nama as nama_penumpang FROM orders o JOIN users u ON o.user_id = u.id WHERE o.status = 'Menunggu Driver' OR (o.status IN ('Driver Menuju Lokasi', 'Driver Tiba', 'Perjalanan Dimulai') AND o.driver_id = ?) ORDER BY o.created_at DESC LIMIT 1");
@@ -242,6 +248,112 @@ $total_trip = $income_today['total_trip'] ?? 0;
             btn.style.background = isOnline ? '#10b981' : '#ef4444';
             document.getElementById('statusText').innerText = isOnline ? 'Online' : 'Offline';
             fetch('driver_dashboard.php?ajax=toggle', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: isOnline }) });
+        }
+
+                let currentOrderId = <?= $active_order ? $active_order['id'] : 'null' ?>;
+        const myUserId = <?= $_SESSION['user_id'] ?>;
+        const driverId = <?= $driver_id ?>;
+
+        function updateActionButtons(status) {
+            const container = document.getElementById('action-buttons');
+            container.innerHTML = ''; 
+            
+            // Tombol Chat besar selalu muncul jika order belum selesai
+            if (status !== 'Selesai' && status !== 'Menunggu Driver') {
+                container.innerHTML += `<button class="btn-chat" onclick="bukaChat()">💬 Chat Penumpang</button>`;
+            }
+
+            if (status === 'Menunggu Driver') {
+                container.innerHTML += `<button class="btn-action btn-terima" onclick="updateOrderStatus('Driver Menuju Lokasi')">Terima Orderan</button>`;
+            } else if (status === 'Driver Menuju Lokasi') {
+                container.innerHTML += `<button class="btn-action btn-terima" onclick="updateOrderStatus('Driver Tiba')">Saya Sudah Tiba</button>`;
+            } else if (status === 'Driver Tiba') {
+                container.innerHTML += `<button class="btn-action btn-terima" onclick="updateOrderStatus('Perjalanan Dimulai')">Mulai Perjalanan</button>`;
+            } else if (status === 'Perjalanan Dimulai') {
+                container.innerHTML += `<button class="btn-action btn-selesai" onclick="updateOrderStatus('Selesai')">Selesaikan Perjalanan</button>`;
+            }
+        }
+        
+        <?php if($active_order): ?> updateActionButtons('<?= $active_order['status'] ?>'); <?php endif; ?>
+
+        function updateOrderStatus(newStatus) {
+            fetch('../api/driver_action.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ order_id: currentOrderId, driver_id: driverId, status: newStatus })
+            }).then(() => location.reload());
+        }
+
+        // CHAT DRIVER SISI
+        function bukaChat() {
+            document.getElementById('chatModal').classList.add('active');
+            muatPesan();
+        }
+        function muatPesan() {
+            if(!currentOrderId) return;
+            fetch(`../api/chat.php?order_id=${currentOrderId}`)
+            .then(res => res.json())
+            .then(data => {
+                const chatBody = document.getElementById('chatBody');
+                chatBody.innerHTML = '';
+                data.forEach(chat => {
+                    const isSaya = chat.sender_id == myUserId;
+                    chatBody.innerHTML += `<div class="bubble ${isSaya ? 'me' : 'other'}">${chat.pesan}</div>`;
+                });
+                chatBody.scrollTop = chatBody.scrollHeight;
+            });
+        }
+        function kirimPesan() {
+            const input = document.getElementById('pesanInput');
+            if(input.value.trim() && currentOrderId) {
+                fetch('../api/chat.php', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_id: currentOrderId, pesan: input.value.trim() })
+                }).then(() => { input.value = ''; muatPesan(); });
+            }
+        }
+
+        setInterval(() => {
+            if (isOnline) {
+                fetch('driver_dashboard.php?ajax=check')
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.empty && data.id !== currentOrderId) {
+                        currentOrderId = data.id;
+                        document.getElementById('waitingBox').style.display = 'none';
+                        document.getElementById('activeOrderBox').style.display = 'block';
+                        document.getElementById('ao-nama').innerText = "🔔 Order: " + data.nama_penumpang;
+                        document.getElementById('ao-status').innerText = data.status;
+                        document.getElementById('ao-harga').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(data.harga);
+                        updateActionButtons(data.status);
+                    }
+                });
+            }
+            if (document.getElementById('chatModal').classList.contains('active')) muatPesan();
+        }, 3000);
+
+        function prosesWithdraw() {
+            const jumlah = document.getElementById('w-jumlah').value;
+            const metode = document.getElementById('w-metode').value;
+            const rekening = document.getElementById('w-rekening').value;
+
+            if(jumlah < 10000) { alert("Minimal penarikan adalah Rp 10.000"); return; }
+            if(!rekening) { alert("Harap isi nomor e-wallet Anda!"); return; }
+
+            fetch('../api/withdraw.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ driver_id: driverId, jumlah: jumlah, metode: metode, rekening: rekening })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    alert("Berhasil! Permintaan pencairan dana sedang diproses oleh Admin Te-Bar.");
+                    document.getElementById('modalWithdraw').classList.remove('active');
+                } else {
+                    alert(data.message);
+                }
+            });
         }
     </script>
 </body>
