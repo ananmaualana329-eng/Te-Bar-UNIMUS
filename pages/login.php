@@ -159,3 +159,56 @@
 
         </div>
     </div>
+    <script>
+        // Membuka form yang benar jika ada error setelah submit
+        <?php if(isset($_POST['register'])): ?>
+            switchForm('daftar');
+        <?php endif; ?>
+
+        function switchForm(tipe) {
+            const btnMasuk = document.getElementById('btn-masuk');
+            const btnDaftar = document.getElementById('btn-daftar');
+            const formMasuk = document.getElementById('login-form');
+            const formDaftar = document.getElementById('register-form');
+
+            if (tipe === 'masuk') {
+                btnMasuk.classList.add('active');
+                btnDaftar.classList.remove('active');
+                formMasuk.classList.add('active');
+                formDaftar.classList.remove('active');
+            } else {
+                btnDaftar.classList.add('active');
+                btnMasuk.classList.remove('active');
+                formDaftar.classList.add('active');
+                formMasuk.classList.remove('active');
+            }
+        }
+
+        function selectRole(role) {
+            document.getElementById('role-penumpang').classList.remove('selected');
+            document.getElementById('role-driver').classList.remove('selected');
+            
+            const driverFields = document.getElementById('driver-fields');
+            const motorInput = document.getElementById('input-motor');
+            const platInput = document.getElementById('input-plat');
+            const fotoInput = document.getElementById('input-foto'); // Tangkap input foto
+
+            if (role === 'penumpang') {
+                document.getElementById('role-penumpang').classList.add('selected');
+                driverFields.style.display = 'none'; 
+                // Hapus sifat wajib isi untuk penumpang
+                motorInput.removeAttribute('required');
+                platInput.removeAttribute('required');
+                fotoInput.removeAttribute('required');
+            } else {
+                document.getElementById('role-driver').classList.add('selected');
+                driverFields.style.display = 'block'; 
+                // Aktifkan sifat wajib isi untuk driver
+                motorInput.setAttribute('required', 'true');
+                platInput.setAttribute('required', 'true');
+                fotoInput.setAttribute('required', 'true');
+            }
+        }
+    </script>
+</body>
+</html>
