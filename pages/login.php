@@ -57,6 +57,37 @@ if (isset($_POST['register'])) {
         }
     }
 }
+/// 2. LOGIN
+    if (isset($_POST['login'])) {
+        $nim = htmlspecialchars($_POST['nim']);
+        $password = $_POST['password'];
+
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE nim = ?");
+        $stmt->execute([$nim]);
+        $user = $stmt->fetch();
+
+        // Verifikasi password hash
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['nama'] = $user['nama'];
+            $_SESSION['nim'] = $user['nim'];
+            
+            // mengecek apakah user ini terdaftar sebagai driver
+            $stmt_driver = $pdo->prepare("SELECT id FROM drivers WHERE user_id = ?");
+            $stmt_driver->execute([$user['id']]);
+            
+            if ($stmt_driver->rowCount() > 0) {
+                // Jika dia driver, arahkan ke dashboard driver
+                header("Location: driver_dashboard.php");
+            } else {
+                // Jika dia penumpang biasa, arahkan ke peta
+                header("Location: map.php");
+            }
+            exit;
+        } else {
+            $error = "NIM atau Password yang Anda masukkan salah!";
+        }
+    }
 ?>
 
 <!DOCTYPE html>
