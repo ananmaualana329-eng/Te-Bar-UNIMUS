@@ -88,6 +88,21 @@ if (!$order) die("Pesanan tidak valid.");
         L.marker([<?= $order['pickup_lat'] ?>, <?= $order['pickup_lng'] ?>]).addTo(map).bindPopup("Lokasi Jemput");
         let driverMarker = null;
 
+           setInterval(() => {
+            fetch(`../api/status.php?id=${orderId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status_order) {
+                        document.getElementById('order-status').innerText = data.status_order;
+                        if(data.status_order === 'Selesai') window.location.href = 'rating.php?id=' + orderId;
+                    }
+                    if(data.driver_lat && data.driver_lng) {
+                        const newLatLng = new L.LatLng(data.driver_lat, data.driver_lng);
+                        if(!driverMarker) driverMarker = L.marker(newLatLng, {icon: iconDriver}).addTo(map);
+                        else driverMarker.setLatLng(newLatLng);
+                    }
+                });
+        }, 3000);
     </script>
 </body>
 </html>
