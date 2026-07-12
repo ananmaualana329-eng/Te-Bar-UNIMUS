@@ -78,5 +78,16 @@ if (!$order) die("Pesanan tidak valid.");
             </div>
         <?php endif; ?>
     </div>
+    <script>
+        const orderId = <?= $order_id ?>;
+        const myUserId = <?= $_SESSION['user_id'] ?>;
+        const map = L.map('map', { zoomControl: false }).setView([<?= $order['pickup_lat'] ?>, <?= $order['pickup_lng'] ?>], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        const iconDriver = L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png', iconSize: [25, 41], iconAnchor: [12, 41] });
+        L.marker([<?= $order['pickup_lat'] ?>, <?= $order['pickup_lng'] ?>]).addTo(map).bindPopup("Lokasi Jemput");
+        let driverMarker = null;
+
+    </script>
 </body>
 </html>
