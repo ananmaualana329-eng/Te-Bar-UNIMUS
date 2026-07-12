@@ -78,6 +78,20 @@ if (!$order) die("Pesanan tidak valid.");
             </div>
         <?php endif; ?>
     </div>
+
+     <div class="chat-modal" id="chatModal">
+        <div class="chat-header">
+            <span>💬 Live Chat dengan <?= $order['nama_driver'] ?></span>
+            <span style="cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('chatModal').classList.remove('active')">×</span>
+        </div>
+        <div class="chat-body" id="chatBody"></div>
+        <div class="chat-input">
+            <input type="text" id="pesanInput" placeholder="Ketik pesan..." onkeypress="if(event.key === 'Enter') kirimPesan()">
+            <button onclick="kirimPesan()">➤</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         const orderId = <?= $order_id ?>;
         const myUserId = <?= $_SESSION['user_id'] ?>;
@@ -103,6 +117,34 @@ if (!$order) die("Pesanan tidak valid.");
                     }
                 });
         }, 3000);
+         // LOGIKA CHAT
+        function muatPesan() {
+            fetch(`../api/chat.php?order_id=${orderId}`)
+            .then(res => res.json())
+            .then(data => {
+                const chatBody = document.getElementById('chatBody');
+                chatBody.innerHTML = '';
+                data.forEach(chat => {
+                    const isSaya = chat.sender_id == myUserId;
+                    chatBody.innerHTML += `<div class="bubble ${isSaya ? 'me' : 'other'}">${chat.pesan}</div>`;
+                });
+                chatBody.scrollTop = chatBody.scrollHeight;
+            });
+        }
+
+        function kirimPesan() {
+            const input = document.getElementById('pesanInput');
+            const pesan = input.value.trim();
+            if(pesan) {
+                input.value = ''; 
+                fetch('../api/chat.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_id: orderId, pesan: pesan })
+                }).then(() => muatPesan());
+            }
+        }
+        setInterval(() => { if(document.getElementById('chatModal').classList.contains('active')) muatPesan(); }, 2000);
     </script>
 </body>
 </html>
