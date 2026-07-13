@@ -11,48 +11,55 @@ if (isset($_SESSION['user_id'])) {
 $error = '';
 $success = '';
 
-// 1. REGISTER
+// REGISTER
 if (isset($_POST['register'])) {
-    $role = $_POST['role'] ?? 'penumpang';
     $nama = htmlspecialchars($_POST['nama']);
-    $nim = htmlspecialchars($_POST['nim']);
     $email = htmlspecialchars($_POST['email']);
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $foto_name = 'default.jpg';
-
-    // Proses Upload Foto (Driver)
-    if ($role === 'driver' && isset($_FILES['foto']) && $_FILES['foto']['error'] === 0) {
-        $allowed = ['jpg', 'jpeg', 'png'];
-        $filename = $_FILES['foto']['name'];
-        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    $role = $_POST['role']; 
+    $password = $_POST['password'];
+    $konfirmasi_password = $_POST['konfirmasi_password'];
+    
+    // 1. MENGECEK KONFIRMASI PASSWORD
+    if ($password !== $konfirmasi_password) {
+        $error = "Konfirmasi password tidak cocok! Harap periksa kembali.";
+    } else {
+        // 2. MENGECEK EMAIL GANDA
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
         
-        if (in_array($ext, $allowed)) {
-            $foto_name = $nim . '_' . time() . '.' . $ext; // Format: NIM_Waktu.jpg
-            move_uploaded_file($_FILES['foto']['tmp_name'], '../assets/uploads/' . $foto_name);
+        if ($stmt->rowCount() > 0) {
+            $error = "Email/NIM sudah terdaftar! Silakan login.";
         } else {
-            $error = "Format foto harus JPG atau PNG!";
-        }
-    }
-
-    if ($error == '') {
-        $stmt_check = $pdo->prepare("SELECT id FROM users WHERE nim = ? OR email = ?");
-        $stmt_check->execute([$nim, $email]);
-        
-        if ($stmt_check->rowCount() > 0) {
-            $error = "NIM atau Email sudah terdaftar!";
-        } else {
-            $stmt = $pdo->prepare("INSERT INTO users (nim, nama, email, password, foto) VALUES (?, ?, ?, ?, ?)");
-            if ($stmt->execute([$nim, $nama, $email, $password, $foto_name])) {
-                $new_user_id = $pdo->lastInsertId();
+            // MENGENKRIPSI PASSWORD & INSERT KE TABEL USERS
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $pdo->prepare("INSERT INTO users (nama, email, password, role) VALUES (?, ?, ?, ?)");
+            
+            if ($stmt->execute([$nama, $email, $hashed_password, $role])) {
+                $user_id = $pdo->lastInsertId(); // Ambil ID user yang baru mendaftar
+                
                 if ($role === 'driver') {
                     $motor = htmlspecialchars($_POST['motor']);
                     $plat = htmlspecialchars($_POST['plat']);
+                    
+                    // Proses Upload Foto
+                    $foto_nama = 'default.jpg';
+                    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
+                        $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+                        $foto_nama = 'driver_' . time() . '.' . $ext;
+                        move_uploaded_file($_FILES['foto']['tmp_name'], '../assets/uploads/' . $foto_nama);
+                        
+                        // mengupdate nama foto ke tabel users
+                        $pdo->prepare("UPDATE users SET foto = ? WHERE id = ?")->execute([$foto_nama, $user_id]);
+                    }
+                    
+                    // menyimpan data kendaraan ke tabel drivers
                     $stmt_driver = $pdo->prepare("INSERT INTO drivers (user_id, motor, plat_nomor) VALUES (?, ?, ?)");
-                    $stmt_driver->execute([$new_user_id, $motor, $plat]);
+                    $stmt_driver->execute([$user_id, $motor, $plat]);
                 }
-                $success = "Pendaftaran berhasil! Silakan masuk.";
+                
+                $success = "Pendaftaran berhasil! Silakan login.";
             } else {
-                $error = "Terjadi kesalahan sistem.";
+                $error = "Terjadi kesalahan saat mendaftar ke database.";
             }
         }
     }
@@ -186,9 +193,9 @@ if (isset($_POST['register'])) {
                         <input type="text" name="nim" inputmode="numeric" pattern="[0-9]*" placeholder="Contoh: 13182420123" required>
                     </div>
                     <div class="input-group">
-                        <label>KATA SANDI</label>
-                        <input type="password" name="password" placeholder="••••••••" required>
-                    </div>
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Masukkan password Anda" required>
+                     </div>
                     <button type="submit" name="login" class="btn-submit">Masuk Sekarang</button>
                 </form>
             </div>
@@ -225,6 +232,15 @@ if (isset($_POST['register'])) {
                     <div class="input-group">
                         <label>Email Pribadi / Kampus</label>
                         <input type="email" name="email" placeholder="Contoh: nama@gmail.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Buat Password</label>
+                        <input type="password" name="password" id="password" placeholder="Minimal 6 karakter" required minlength="6">
+                    </div>
+            
+                    <div class="input-group">
+                        <label>Ulangi Password</label>
+                        <input type="password" name="konfirmasi_password" id="konfirmasi_password" placeholder="Masukkan ulang password Anda" required>
                     </div>
 
                     <!-- Field Khusus Driver (Disembunyikan secara default saat Penumpang dipilih) -->
@@ -288,19 +304,27 @@ if (isset($_POST['register'])) {
             if (role === 'penumpang') {
                 document.getElementById('role-penumpang').classList.add('selected');
                 driverFields.style.display = 'none'; 
-                // Hapus sifat wajib isi untuk penumpang
                 motorInput.removeAttribute('required');
                 platInput.removeAttribute('required');
                 fotoInput.removeAttribute('required');
             } else {
                 document.getElementById('role-driver').classList.add('selected');
                 driverFields.style.display = 'block'; 
-                // Aktifkan sifat wajib isi untuk driver
                 motorInput.setAttribute('required', 'true');
                 platInput.setAttribute('required', 'true');
                 fotoInput.setAttribute('required', 'true');
             }
         }
+        // menambahkan pengecekan sebelum form register dikirim
+        document.querySelector('#form-register form').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const konfirmasi = document.getElementById('konfirmasi_password').value;
+            
+            if (password !== konfirmasi) {
+                e.preventDefault(); // membatalkan pengiriman form
+                alert("Password dan Ulangi Password harus sama!");
+            }
+        });
     </script>
 </body>
 </html>
