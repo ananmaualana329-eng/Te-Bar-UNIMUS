@@ -3,85 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Keamanan - Te-Bar</title>
+  <title>Keamanan Sistem - Te-Bar</title>
 
   <style>
     body {
       margin: 0;
       font-family: "Segoe UI", sans-serif;
-      background-color: #14c7c0;
+      background: #14c7c0;
       color: #083c3a;
     }
 
-    /* Navbar */
     .navbar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
       padding: 20px 50px;
-      background-color: #6ed6d2;
-    }
-
-    .navbar h1 {
-      margin: 0;
-    }
-
-    .profile {
+      background: #6ed6d2;
       font-weight: 500;
     }
 
-    /* Header */
     .header {
       padding: 40px 60px 20px;
     }
 
     .header h1 {
-      font-size: 40px;
+      font-size: 36px;
       margin-bottom: 10px;
     }
 
-    .header p {
-      font-size: 18px;
-      max-width: 600px;
-    }
-
-    /* Container */
     .container {
-      background-color: #a7d6d4;
+      background: #a7d6d4;
       margin: 30px 60px;
       padding: 30px;
       border-radius: 20px;
     }
 
-    /* Card */
-    .card {
-      background-color: #d6eeee;
+    .section {
+      background: #d6eeee;
       padding: 20px;
       border-radius: 15px;
       margin-bottom: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
-    .card-text {
-      max-width: 80%;
-    }
-
-    .card h2 {
-      margin: 0 0 5px;
+    .section h2 {
+      margin: 0 0 10px;
       font-size: 18px;
     }
 
-    .card p {
+    .section p {
       margin: 0;
       font-size: 14px;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
-    .icon {
-      font-size: 26px;
+    /* STATUS */
+    .status-box {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
     }
+
+    .safe { color: green; font-weight: bold; }
+    .warn { color: orange; font-weight: bold; }
+
+    /* PASSWORD CHECK */
+    .input-group {
+      margin-top: 10px;
+    }
+
+    input {
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #083c3a;
+      color: white;
+      margin-left: 5px;
+    }
+
+    /* REPORT */
+    textarea {
+      width: 100%;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
   </style>
 </head>
 
@@ -89,78 +102,119 @@
 
   <!-- Navbar -->
   <div class="navbar">
-    <h1>Te-Bar.</h1>
-    <div class="profile">Keamanan Sistem</div>
+    <div>Te-Bar.</div>
+    <div>Keamanan Sistem</div>
   </div>
 
   <!-- Header -->
   <div class="header">
     <h1>Keamanan Pengguna</h1>
     <p>
-      Te-Bar menerapkan standar keamanan sistem untuk menjaga kerahasiaan data,
-      memastikan keaslian pengguna, serta menciptakan lingkungan tebengan yang aman dan terpercaya.
+      Sistem Te-Bar dirancang dengan pendekatan keamanan berlapis untuk menjaga
+      integritas data, autentikasi pengguna, serta kenyamanan dalam penggunaan layanan.
     </p>
   </div>
 
-  <!-- Content -->
   <div class="container">
 
-    <div class="card">
-      <div class="card-text">
-        <h2>🔐 Autentikasi Aman</h2>
-        <p>
-          Sistem menggunakan enkripsi password (bcrypt) dan token autentikasi (JWT)
-          untuk memastikan hanya pengguna yang terverifikasi yang dapat mengakses layanan.
-        </p>
-      </div>
-      <div class="icon">✔️</div>
+    <!-- STATUS KEAMANAN -->
+    <div class="status-box">
+      Status Akun: <span id="statusText" class="safe">Aman</span><br>
+      Kekuatan Password: <span id="strength">Belum Dicek</span>
     </div>
 
-    <div class="card">
-      <div class="card-text">
-        <h2>🛡️ Perlindungan Data</h2>
-        <p>
-          Seluruh data pengguna dilindungi dan dikirim melalui protokol HTTPS
-          untuk mencegah akses tidak sah dan penyadapan data.
-        </p>
-      </div>
-      <div class="icon">✔️</div>
+    <!-- AUTENTIKASI -->
+    <div class="section">
+      <h2>🔐 Autentikasi dan Otorisasi</h2>
+      <p>
+        Sistem menggunakan hashing bcrypt untuk penyimpanan password dan JWT
+        untuk otorisasi akses pengguna secara aman.
+      </p>
     </div>
 
-    <div class="card">
-      <div class="card-text">
-        <h2>📍 Verifikasi Identitas</h2>
-        <p>
-          Pengguna diwajibkan menggunakan email institusi untuk memastikan identitas
-          dan meningkatkan kepercayaan antar pengguna.
-        </p>
-      </div>
-      <div class="icon">✔️</div>
+    <!-- DATA -->
+    <div class="section">
+      <h2>🛡️ Perlindungan Data</h2>
+      <p>
+        Seluruh komunikasi data menggunakan protokol HTTPS guna mencegah
+        penyadapan serta akses tidak sah terhadap informasi pengguna.
+      </p>
     </div>
 
-    <div class="card">
-      <div class="card-text">
-        <h2>⚠️ Validasi Input</h2>
-        <p>
-          Sistem melakukan validasi dan sanitasi data untuk mencegah serangan
-          seperti SQL Injection dan Cross-Site Scripting (XSS).
-        </p>
-      </div>
-      <div class="icon">✔️</div>
+    <!-- VALIDASI -->
+    <div class="section">
+      <h2>⚠️ Validasi dan Sanitasi Input</h2>
+      <p>
+        Sistem melakukan validasi input untuk mencegah serangan seperti
+        SQL Injection dan Cross-Site Scripting (XSS).
+      </p>
     </div>
 
-    <div class="card">
-      <div class="card-text">
-        <h2>🚨 Pelaporan Pengguna</h2>
-        <p>
-          Tersedia fitur pelaporan untuk menindaklanjuti pelanggaran dan menjaga
-          keamanan serta kenyamanan pengguna.
-        </p>
+    <!-- PASSWORD CHECK -->
+    <div class="section">
+      <h2>🔎 Pemeriksaan Kekuatan Password</h2>
+
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Masukkan password">
+        <button onclick="checkPassword()">Periksa</button>
       </div>
-      <div class="icon">✔️</div>
+    </div>
+
+    <!-- VERIFIKASI -->
+    <div class="section">
+      <h2>📍 Verifikasi Identitas</h2>
+      <p>
+        Pengguna diwajibkan menggunakan email institusi untuk memastikan
+        keaslian identitas dalam sistem.
+      </p>
+    </div>
+
+    <!-- REPORT -->
+    <div class="section">
+      <h2>🚨 Sistem Pelaporan</h2>
+      <p>Laporkan aktivitas mencurigakan untuk menjaga keamanan bersama.</p>
+
+      <textarea id="reportText" placeholder="Tulis laporan..."></textarea>
+      <button onclick="sendReport()">Kirim Laporan</button>
     </div>
 
   </div>
+
+  <script>
+    function checkPassword() {
+      const pass = document.getElementById("password").value;
+      const strength = document.getElementById("strength");
+      const status = document.getElementById("statusText");
+
+      if (pass.length < 6) {
+        strength.innerText = "Lemah";
+        strength.style.color = "red";
+        status.innerText = "Perlu Perbaikan";
+        status.className = "warn";
+      } else if (pass.match(/[A-Z]/) && pass.match(/[0-9]/)) {
+        strength.innerText = "Kuat";
+        strength.style.color = "green";
+        status.innerText = "Aman";
+        status.className = "safe";
+      } else {
+        strength.innerText = "Sedang";
+        strength.style.color = "orange";
+        status.innerText = "Cukup Aman";
+        status.className = "warn";
+      }
+    }
+
+    function sendReport() {
+      const text = document.getElementById("reportText").value;
+
+      if (text === "") {
+        alert("Laporan tidak boleh kosong");
+      } else {
+        alert("Laporan berhasil dikirim");
+        document.getElementById("reportText").value = "";
+      }
+    }
+  </script>
 
 </body>
 </html>

@@ -1,0 +1,62 @@
+.cara-kerja {
+    padding: 100px 8%;
+    background: #f8ffff;
+}
+
+.cara-kerja h2 {
+    text-align: center;
+    font-size: 3rem;
+    color: #003b3b;
+    margin-bottom: 15px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #555;
+    margin-bottom: 60px;
+    font-size: 1.1rem;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    gap: 30px;
+}
+
+.step-card {
+    background: white;
+    border-radius: 20px;
+    padding: 35px 25px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.step-card:hover {
+    transform: translateY(-10px);
+}
+
+.step-number {
+    width: 70px;
+    height: 70px;
+    background: #00d8de;
+    color: #003b3b;
+    font-size: 2rem;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+.step-card h3 {
+    color: #003b3b;
+    margin-bottom: 10px;
+}
+
+.step-card p {
+    color: #666;
+    line-height: 1.6;
+}

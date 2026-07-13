@@ -1,234 +1,403 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Te-Bar - Tebengan Bareng UNIMUS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-        }
-        
-        body {
-            background-color: cyan; /* Dikembalikan sesuai kesepakatan tim */
-            color: #333;
-            overflow-x: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Te-Bar - Tebengan Bareng UNIMUS</title>
 
-        /* --- Navbar Styles --- */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 80px;
-            /* Dibuat agak transparan agar warna cyan tetap terlihat */
-            background-color: rgba(255, 255, 255, 0.4); 
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #033D36;
-            text-decoration: none;
-            letter-spacing: -1px;
-        }
+<style>
 
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Montserrat',sans-serif;
+}
 
-        .nav-links a {
-            text-decoration: none;
-            color: #033D36;
-            font-weight: 600;
-            transition: opacity 0.3s;
-        }
+html{
+    scroll-behavior:smooth;
+}
 
-        .nav-links a:hover {
-            opacity: 0.7;
-        }
+body{
+    background:cyan;
+    color:#333;
+    overflow-x:hidden;
+}
 
-        /* --- Button Styles --- */
-        .btn {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-            display: inline-block;
-            text-align: center;
-        }
+/* ================= NAVBAR ================= */
 
-        .btn-primary {
-            background-color: #033D36;
-            color: white;
-            box-shadow: 0 4px 6px rgba(3, 61, 54, 0.2);
-        }
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 80px;
+    background:rgba(255,255,255,0.4);
+    backdrop-filter:blur(10px);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
 
-        .btn-primary:hover {
-            background-color: #022622;
-            transform: translateY(-2px);
-        }
+.logo{
+    font-size:1.8rem;
+    font-weight:800;
+    color:#033D36;
+    text-decoration:none;
+}
 
-        .btn-outline {
-            background-color: transparent;
-            color: #033D36;
-            border: 2px solid #033D36;
-        }
+.nav-links{
+    display:flex;
+    gap:30px;
+}
 
-        .btn-outline:hover {
-            background-color: #033D36;
-            color: white;
-        }
+.nav-links a{
+    text-decoration:none;
+    color:#033D36;
+    font-weight:600;
+}
 
-        /* --- Hero Section Styles --- */
-        .hero {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 60px 80px;
-            min-height: calc(100vh - 80px);
-        }
+.nav-links a:hover{
+    opacity:0.7;
+}
 
-        .hero-text {
-            flex: 1;
-            max-width: 600px;
-            z-index: 2;
-        }
+/* ================= BUTTON ================= */
 
-        .hero-text h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            color: #033D36; 
-            line-height: 1.15;
-            margin-bottom: 20px;
-        }
+.btn{
+    padding:12px 24px;
+    border-radius:8px;
+    font-weight:600;
+    text-decoration:none;
+    transition:0.3s;
+}
 
-        .hero-text .subtitle {
-            font-size: 1.2rem;
-            color: #033D36;
-            font-weight: 500;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
+.btn-primary{
+    background:#033D36;
+    color:white;
+}
 
-        .trust-badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.6);
-            color: #033D36;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-        }
+.btn-primary:hover{
+    background:#022622;
+}
 
-        .cta-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
+.btn-outline{
+    border:2px solid #033D36;
+    color:#033D36;
+}
 
-        .hero-image {
-            flex: 1;
-            display: flex;
-            justify-content: flex-end;
-        }
+.btn-outline:hover{
+    background:#033D36;
+    color:white;
+}
 
-        .image-placeholder {
-            width: 100%;
-            max-width: 500px;
-            height: 450px;
-            background-color: rgba(255, 255, 255, 0.5);
-            border: 2px dashed #033D36;
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: #033D36;
-            overflow: hidden;
-        }
+/* ================= HERO ================= */
 
-        .image-placeholder img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+.hero{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:60px 80px;
+    min-height:100vh;
+}
 
-        /* --- Responsive Design --- */
-        @media (max-width: 1024px) {
-            header { padding: 20px 40px; }
-            .hero { padding: 40px; }
-            .hero-text h1 { font-size: 3rem; }
-        }
+.hero-text{
+    flex:1;
+    max-width:600px;
+}
 
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px 20px;
-            }
-            .nav-links { display: none; }
-            
-            .hero { 
-                flex-direction: column; 
-                text-align: center; 
-                padding: 30px 20px;
-                justify-content: center;
-            }
-            .hero-text { margin-bottom: 40px; }
-            .cta-group { 
-                justify-content: center; 
-                flex-direction: column;
-            }
-            .hero-image { width: 100%; justify-content: center; }
-            .image-placeholder { height: 350px; }
-        }
-    </style>
+.trust-badge{
+    display:inline-block;
+    background:rgba(255,255,255,.6);
+    color:#033D36;
+    padding:10px 18px;
+    border-radius:30px;
+    font-weight:700;
+    margin-bottom:20px;
+}
+
+.hero-text h1{
+    font-size:4rem;
+    line-height:1.1;
+    color:#033D36;
+    margin-bottom:20px;
+}
+
+.subtitle{
+    font-size:1.2rem;
+    line-height:1.7;
+    color:#033D36;
+    margin-bottom:30px;
+}
+
+.cta-group{
+    display:flex;
+    gap:15px;
+}
+
+.hero-image{
+    flex:1;
+    display:flex;
+    justify-content:flex-end;
+}
+
+.image-placeholder{
+    width:100%;
+    max-width:500px;
+    height:450px;
+    border-radius:24px;
+    overflow:hidden;
+    border:2px dashed #033D36;
+    background:white;
+}
+
+.image-placeholder img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* ================= CARA KERJA ================= */
+
+.cara-kerja{
+    padding:100px 80px;
+    background:rgba(255,255,255,0.25);
+}
+
+.cara-kerja h2{
+    text-align:center;
+    font-size:3rem;
+    color:#033D36;
+    margin-bottom:15px;
+}
+
+.subtitle-section{
+    text-align:center;
+    color:#033D36;
+    margin-bottom:60px;
+    font-size:1.1rem;
+}
+
+.steps{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:30px;
+}
+
+.step-card{
+    background:white;
+    border-radius:20px;
+    padding:35px 25px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.step-card:hover{
+    transform:translateY(-10px);
+}
+
+.step-number{
+    width:70px;
+    height:70px;
+    background:cyan;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:2rem;
+    font-weight:bold;
+    color:#033D36;
+    margin:auto;
+    margin-bottom:20px;
+}
+
+.step-card h3{
+    color:#033D36;
+    margin-bottom:10px;
+}
+
+.step-card p{
+    line-height:1.6;
+    color:#666;
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+    background:#033D36;
+    color:white;
+    text-align:center;
+    padding:30px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:768px){
+
+    header{
+        flex-direction:column;
+        gap:15px;
+        padding:20px;
+    }
+
+    .hero{
+        flex-direction:column;
+        text-align:center;
+        padding:30px 20px;
+    }
+
+    .hero-text h1{
+        font-size:3rem;
+    }
+
+    .cta-group{
+        flex-direction:column;
+    }
+
+    .hero-image{
+        margin-top:30px;
+        justify-content:center;
+    }
+
+    .image-placeholder{
+        height:300px;
+    }
+
+    .cara-kerja{
+        padding:70px 20px;
+    }
+
+    .cara-kerja h2{
+        font-size:2.2rem;
+    }
+
+}
+
+</style>
 </head>
+
 <body>
 
-    <header>
-        <a href="#" class="logo">Te-Bar.</a>
-        <nav class="nav-links">
-            <a href="beranda.html">Beranda</a>
-            <a href="kerja.html">Cara Kerja</a>
-            <a href="keamanan.html">Keamanan</a>
-        </nav>
-        <a href="daftar.html" class="btn btn-primary">Masuk / Daftar</a>
-    </header>
+<header>
 
-    <main class="hero">
-        <div class="hero-text">
-            <div class="trust-badge">🏍️ Khusus Mahasiswa UNIMUS</div>
-            <h1>Te-Bar<br>Tebengan Bareng.</h1>
-            <p class="subtitle">Aman & Terpercaya. Kurangi macet, hemat ongkos, dan tambah teman satu kampus.</p>
-            
-            <div class="cta-group">
-                <a href="cari.html" class="btn btn-primary">Cari Tebengan</a>
-                <a href="beri.html" class="btn btn-outline">Beri Tebengan</a>
-            </div>
+    <a href="#" class="logo">Te-Bar.</a>
+
+    <nav class="nav-links">
+        <a href="#">Beranda</a>
+        <a href="#cara-kerja">Cara Kerja</a>
+        <a href="keamanan.html">Keamanan</a>
+    </nav>
+
+    <a href="daftar.html" class="btn btn-primary">
+        Masuk / Daftar
+    </a>
+
+</header>
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="hero-text">
+
+        <div class="trust-badge">
+            🏍️ Khusus Mahasiswa UNIMUS
         </div>
 
-        <div class="hero-image">
-            <div class="image-placeholder">
-                <img src="assets/images/tebar.jpg" alt="Ilustrasi Mahasiswa UNIMUS" onerror="this.style.display='none'; this.parentNode.innerHTML='<p>Ilustrasi/Foto Aplikasi Tampil Di Sini</p>'">
-            </div>
+        <h1>
+            Te-Bar<br>
+            Tebengan Bareng.
+        </h1>
+
+        <p class="subtitle">
+            Aman & Terpercaya. Kurangi macet,
+            hemat ongkos, dan tambah teman satu kampus.
+        </p>
+
+        <div class="cta-group">
+            <a href="cari.html" class="btn btn-primary">
+                Cari Tebengan
+            </a>
+
+            <a href="beri.html" class="btn btn-outline">
+                Beri Tebengan
+            </a>
         </div>
-    </main>
+
+    </div>
+
+    <div class="hero-image">
+
+        <div class="image-placeholder">
+
+            <img src="assets/images/tebar.jpg"
+            alt="Ilustrasi Tebar"
+            onerror="this.style.display='none'; this.parentNode.innerHTML='<h3>Gambar Te-Bar</h3>'">
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- CARA KERJA -->
+
+<section class="cara-kerja" id="cara-kerja">
+
+    <h2>Cara Kerja Te-Bar</h2>
+
+    <p class="subtitle-section">
+        Temukan teman seperjalanan kampus dengan mudah, aman dan hemat.
+    </p>
+
+    <div class="steps">
+
+        <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>Cari Tebengan</h3>
+            <p>
+                Masukkan lokasi jemput, tujuan kampus,
+                dan waktu keberangkatan.
+            </p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>Pilih Pengendara</h3>
+            <p>
+                Lihat mahasiswa yang memiliki rute
+                perjalanan yang searah.
+            </p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>Pesan Kursi</h3>
+            <p>
+                Klik tombol pesan dan tunggu
+                konfirmasi dari pengendara.
+            </p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-number">4</div>
+            <h3>Berangkat Bersama</h3>
+            <p>
+                Bertemu di titik jemput dan
+                berangkat menuju kampus dengan aman.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+    © 2026 Te-Bar | Tebengan Bareng Mahasiswa UNIMUS
+</footer>
 
 </body>
 </html>
+```
